@@ -1,0 +1,47 @@
+{
+    "containerDefinitions": [
+        {
+            "name": "backend_service",
+            "image": "path/to/rep",
+            "cpu": 512,
+            "memory":1024,
+            "portMappings": [
+                {
+                    "containerPort": 8000,
+                    "protocol": "tcp"
+                }
+            ],
+            "essential": true,
+            "environment": [
+                {
+                    "name": "API_V1_STR",
+                    "value": "v1"
+                },
+                {
+                    "name": "APP_PORT",
+                    "value": "8000"
+                },
+                {
+                    "name": "ENVIRONMENT",
+                    "value": "dev"
+                }
+            ],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "secrets": [
+                {
+                    "name": "DATABASE_URL",
+                    "valueFrom": "arn:aws:ssm:eu-west-1:12345678912:parameter/dev_app_database_url"
+                }
+            ],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/CLUSTER_NAME/SERVICE_NAME",
+                    "awslogs-region": "eu-west-1",
+                    "awslogs-stream-prefix": "task"
+                }
+            }
+        }
+    ]
+}
