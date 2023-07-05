@@ -5,4 +5,4 @@ COPY ./requirements.txt $DIRECTORY/requirements.txt
 COPY requirements/ $DIRECTORY/requirements/
 RUN pip install --no-cache-dir --upgrade -r $DIRECTORY/requirements.txt
 COPY ./src $DIRECTORY
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+ENTRYPOINT ["sh", "bootup.sh"]

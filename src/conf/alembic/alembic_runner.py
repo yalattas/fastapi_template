@@ -1,7 +1,13 @@
-import subprocess
+# import subprocess
+# from fastapi import BackgroundTasks
 
-def run_alembic_migrations():
-    subprocess.run(["alembic", "upgrade", "head"], check=True)
+# # job
+# def run_alembic_migrations():
+#     subprocess.run(["alembic", "upgrade", "head"], check=True)
 
-if __name__ == "__main__":
-    run_alembic_migrations()
+# # run background job
+# def run_migrations(background_tasks: BackgroundTasks):
+#     background_tasks.add_task(run_alembic_migrations)
+
+# if __name__ == "__main__":
+#     run_alembic_migrations()

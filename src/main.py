@@ -1,13 +1,12 @@
 import uvicorn
 import sentry_sdk
-from fastapi import FastAPI, BackgroundTasks
+from fastapi import FastAPI
 # from telegram import urls as telegram_app_url
 from openapi import OpenAPI
 import urls as main_url
 from apps.app1 import urls as app1_router
 from apps.app2 import urls as app2_router
 from conf.settings import settings
-from conf.alembic.alembic_runner import run_alembic_migrations
 
 if settings.IS_SENTRY_ENABLED:
     sentry_sdk.init(
@@ -43,17 +42,12 @@ app.include_router(app2_router.router)
 # https://docs.python.org/3/library/logging.html
 # logging.getLogger("uvicorn.access").disabled = False
 # logging.getLogger("uvicorn.error").disabled = False
-def run_migrations(background_tasks: BackgroundTasks):
-    background_tasks.add_task(run_alembic_migrations)
+
 @app.on_event("startup")
 async def startup_event():
     logger = settings.LOGGER
     console_formatter = uvicorn.logging.ColourizedFormatter(settings.LOGGER_FORMAT,style=settings.LOGGER_STYLE, use_colors=True)
     logger.handlers[0].setFormatter(console_formatter)
-    # db migration process
-    background_tasks = BackgroundTasks()
-    background_tasks.add_task(run_migrations, background_tasks)
-    await background_tasks()
 
 if __name__ == '__main__':
     uvicorn.run("main:app", host="0.0.0.0", port=settings.APP_PORT)
