@@ -7,3 +7,4 @@ alembic>=1.11
 sentry-sdk>=1
 uvicorn[standard]>=0.22
 psycopg2-binary>=2.9
+python-keycloak>=3.3

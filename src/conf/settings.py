@@ -2,8 +2,9 @@
 import os
 import distutils.util
 import boto3
-from pydantic import  BaseSettings
 import logging
+from pydantic import  BaseSettings
+from keycloak import KeycloakOpenID
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = os.environ.get('PROJECT_NAME')
@@ -23,6 +24,18 @@ class Settings(BaseSettings):
     LOGGER_FORMAT: str = "{asctime} - {levelname} - {module}: {message}"
     LOGGER_STYLE: str = "{" # Style must be one of: %,{,$
 
+    KEYCLOAK_HOST: str = os.environ.get('KEYCLOAK_HOST')
+    KEYCLOAK_CLIENT_ID: str = os.environ.get('KEYCLOAK_CLIENT_ID')
+    KEYCLOAK_REALM_NAME: str = os.environ.get('KEYCLOAK_REALM_NAME')
+    KEYCLOAK_SECRET_KEY: str = os.environ.get('KEYCLOAK_SECRET_KEY')
+
+    KEYCLOAK_CLIENT = KeycloakOpenID(server_url=KEYCLOAK_HOST,
+                                    client_id=KEYCLOAK_CLIENT_ID,
+                                    realm_name=KEYCLOAK_REALM_NAME,
+                                    client_secret_key=KEYCLOAK_SECRET_KEY)
+
+    # Get WellKnow
+    config_well_known = KEYCLOAK_CLIENT.well_known()
     class Config:
         case_sensitive = True
 

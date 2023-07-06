@@ -1,19 +1,19 @@
 version: "3.9"
 services:
   backend.ai.app.svc.local:
-    container_name: backend
+    container_name: app-backend
     volumes:
       # below line for development purposes only. Enabling developer to see changes instantely without the need to rebuild
       - ./src:/app
     build: .
-    entrypoint: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    entrypoint: ./bootup.local.sh
     ports:
       - "8000:8000"
     env_file:
       - ./src/conf/app.env
     restart: always
   backend.ai.app.db.local:
-    container_name: database
+    container_name: app-database
     image: postgres:13-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
@@ -21,6 +21,29 @@ services:
       - devops/db/db.env
     ports:
       - "5433:5432"
+  backend.iam.app.svc.local:
+    container_name: iam-backend
+    build: devops/keycloak
+    restart: always
+    env_file:
+      - ./devops/keycloak/iam.env
+    ports:
+      - '8443:8443'
+      - '8080:8080'
+    command:
+      - start-dev
+    depends_on:
+      - backend.iam.db.local
+  backend.iam.db.local:
+    container_name: iam-db
+    image: postgres:13-alpine
+    volumes:
+      - iam_db:/var/lib/postgresql/data/
+    env_file:
+      - devops/keycloak/iam.db.env
+    ports:
+      - "5434:5432"
+
 networks:
   default:
     name: app_custom_network
@@ -28,3 +51,4 @@ networks:
 volumes:
   app:
   postgres_data:
+  iam_db:

@@ -5,7 +5,8 @@ from fastapi import HTTPException
 
 
 class Error(Enum):
-    INVALID_TOKEN = {'status_code': 400, 'detail': ('Invalid token')}
+    INVALID_TOKEN = {'status_code': 403, 'detail': ('Invalid token')}
+    MISSING_TOKEN = {'status_code': 400, 'detail': ('Missing token')}
 
 class APIError:
     def __init__(self, error: Error, extra=None):

@@ -1,7 +1,7 @@
 import uvicorn
 import sentry_sdk
+import tracemalloc
 from fastapi import FastAPI
-# from telegram import urls as telegram_app_url
 from openapi import OpenAPI
 import urls as main_url
 from apps.app1 import urls as app1_router
@@ -45,9 +45,14 @@ app.include_router(app2_router.router)
 
 @app.on_event("startup")
 async def startup_event():
+    tracemalloc.start()
     logger = settings.LOGGER
     console_formatter = uvicorn.logging.ColourizedFormatter(settings.LOGGER_FORMAT,style=settings.LOGGER_STYLE, use_colors=True)
     logger.handlers[0].setFormatter(console_formatter)
+
+@app.on_event("shutdown")
+async def disable_tracemalloc():
+    tracemalloc.stop()
 
 if __name__ == '__main__':
     uvicorn.run("main:app", host="0.0.0.0", port=settings.APP_PORT)
