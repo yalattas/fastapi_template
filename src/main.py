@@ -3,10 +3,11 @@ import sentry_sdk
 import tracemalloc
 from fastapi import FastAPI
 from openapi import OpenAPI
+from conf.settings import settings
 import urls as main_url
+from apps.iam import urls as iam_router
 from apps.app1 import urls as app1_router
 from apps.app2 import urls as app2_router
-from conf.settings import settings
 
 if settings.IS_SENTRY_ENABLED:
     sentry_sdk.init(
@@ -32,12 +33,14 @@ app = FastAPI(
     contact=OpenAPI.contact,
     license_info=OpenAPI.license_info,
 )
-
+# routers -------------------------------
 app.include_router(main_url.router)
+app.include_router(iam_router.router)
 app.include_router(app1_router.router)
 app.include_router(app2_router.router)
 # app.mount('/app1', app1_router.app)
 # app.include_router(telegram_app_url.router)
+# routers -------------------------------
 
 # https://docs.python.org/3/library/logging.html
 # logging.getLogger("uvicorn.access").disabled = False

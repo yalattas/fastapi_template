@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Response, status
+from fastapi import APIRouter, Response
 
 router = APIRouter(
     tags=["default"],

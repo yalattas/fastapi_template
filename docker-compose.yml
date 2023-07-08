@@ -12,6 +12,9 @@ services:
     env_file:
       - ./src/conf/app.env
     restart: always
+    depends_on:
+      - backend.ai.app.db.local
+      - backend.iam.app.svc.local
   backend.ai.app.db.local:
     container_name: app-database
     image: postgres:13-alpine

@@ -35,7 +35,7 @@ docker compose exec -it backend.ai.app.svc.local alembic revision
 
 ## cli token
 ```
-curl --location --request POST 'http://localhost:8080/realms/main/protocol/openid-connect/token' \                                                                                                   [23:33:48]
+curl --location --request POST 'http://localhost:8080/realms/main/protocol/openid-connect/token' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode 'grant_type=password' \
 --data-urlencode 'client_id=backend_service' \
@@ -43,5 +43,5 @@ curl --location --request POST 'http://localhost:8080/realms/main/protocol/openi
 --data-urlencode 'username=test' \
 --data-urlencode 'password=123' \
 --data-urlencode 'realm=main' \
---data-urlencode 'scope=openid
+--data-urlencode 'scope=openid'
 ```
