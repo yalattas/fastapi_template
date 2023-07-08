@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Response
 from conf.settings import settings
-from apps.app2.models import User
+from apps.app2.models import UserApp2
 from conf.database import SessionLocal
 
 router = APIRouter(
@@ -13,7 +13,7 @@ router = APIRouter(
 def test(response: Response):
     response.status_code = 200
     session = SessionLocal()
-    users = session.query(User).all()
+    users = session.query(UserApp2).all()
     session.close()
     for user in users:
         print(user.first_name)

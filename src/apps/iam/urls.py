@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Request
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, Response
 from conf.settings import settings
 from apps.core.utilities import Utility
 from .views import UserView
 from .serializers import KeycloakCustomSerializer
+import json
 
 router = APIRouter(
     prefix=f"/api/{settings.API_V1_STR}/iam",
@@ -17,7 +18,7 @@ class iam:
         auth_url = UserView.UserAuth(request)
         return RedirectResponse(auth_url, status_code=303)
 
-    @router.post("/auth/login/")
+    @router.post("/auth/")
     async def login(request: Request):
         """
         grant_type: str
@@ -28,12 +29,9 @@ class iam:
         body = await body
         body = Utility.parse_byte_to_dict(body)
         body = KeycloakCustomSerializer(payload=body)
-        access_token = UserView.Authenticate(request, body)
-        return {'access_token': access_token}
-
-    @router.post("/auth/signup")
-    async def login(request: Request):
-        body = await request.body()
-        print(body)
-        #TODO: implement signup mechanism
-        return {'access_token': '1'}
+        access_token, refresh_token = UserView.Authenticate(request, body)
+        response = {
+            'access_token': access_token,
+            'refresh_token': refresh_token,
+        }
+        return Response(content=json.dumps(response),  status_code=200, media_type="application/json")

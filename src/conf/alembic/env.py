@@ -6,6 +6,7 @@ from sqlalchemy import pool
 from alembic import context
 
 # from conf.database import Base
+from apps.core.models import Base as core_base
 from apps.iam.models import Base as iam_base
 from apps.app1.models import Base as app1_base
 from apps.app2.models import Base as app2_base
@@ -28,9 +29,10 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 target_metadata = [
-    iam_base.metadata,
-    app1_base.metadata,
-    app2_base.metadata,
+    core_base.metadata,
+    # iam_base.metadata,
+    # app1_base.metadata,
+    # app2_base.metadata,
 ]
 
 # other values from the config, defined by the needs of env.py,

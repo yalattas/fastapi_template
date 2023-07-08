@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request
 from conf.settings import settings
-from apps.app1.models import User
+from apps.app1.models import UserApp1
 from conf.database import SessionLocal
 from apps.core.decorator import is_authenticated
 
@@ -17,7 +17,7 @@ class FirstClass:
 
         print(request.user_id)
         session = SessionLocal()
-        users = session.query(User).all()
+        users = session.query(UserApp1).all()
         session.close()
         for user in users:
             print(user.first_name)
