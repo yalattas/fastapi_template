@@ -28,6 +28,5 @@ class UserView:
         session_state = access_response['session_state']
         authenticated, user_id = KeyCloakIAM(token_type, access_token).authenticate()
         user = AccountService.get_or_create_user(id=user_id)
-        print('session state ---------------------------------- ', session_state)
         session_state = AccountService.generate_session_state(client=client,  session_id=session_state, user_id=user_id)
         return access_token, refresh_token

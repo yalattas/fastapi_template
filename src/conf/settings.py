@@ -3,7 +3,7 @@ import os
 import distutils.util
 import boto3
 import logging
-from pydantic import  BaseSettings
+from pydantic_settings import  BaseSettings
 from keycloak import KeycloakOpenID
 
 class Settings(BaseSettings):
@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     IS_SENTRY_ENABLED: bool = distutils.util.strtobool(os.environ.get('IS_SENTRY_ENABLED'))
     SENTRY_DSN: str = os.environ.get('SENTRY_DSN')
 
-    LOGGER = logging.getLogger("uvicorn.access")
+    LOGGER: object = logging.getLogger("uvicorn.access")
     LOGGER_FORMAT: str = "{asctime} - {levelname} - {module}: {message}"
     LOGGER_STYLE: str = "{" # Style must be one of: %,{,$
 
@@ -29,13 +29,13 @@ class Settings(BaseSettings):
     KEYCLOAK_REALM_NAME: str = os.environ.get('KEYCLOAK_REALM_NAME')
     KEYCLOAK_SECRET_KEY: str = os.environ.get('KEYCLOAK_SECRET_KEY')
 
-    KEYCLOAK_CLIENT = KeycloakOpenID(server_url=KEYCLOAK_HOST,
+    KEYCLOAK_CLIENT: KeycloakOpenID = KeycloakOpenID(server_url=KEYCLOAK_HOST,
                                     client_id=KEYCLOAK_CLIENT_ID,
                                     realm_name=KEYCLOAK_REALM_NAME,
                                     client_secret_key=KEYCLOAK_SECRET_KEY)
 
     # Get WellKnow
-    config_well_known = KEYCLOAK_CLIENT.well_known()
+    config_well_known: object = KEYCLOAK_CLIENT.well_known()
     class Config:
         case_sensitive = True
 
