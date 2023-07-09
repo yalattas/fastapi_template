@@ -37,11 +37,14 @@ class SessionLog(Base):
     def __str__(self):
         return '{} Logged in at {}'.format(self.session_id, self.created_at)
 
-    def save(self) -> None:
+    def create(self) -> None:
         db.add(self)
         db.commit()
 
-    def exist(self, user_id) -> bool:
-        record = db.query(SessionLog).filter(and_(self.session_id == self.session_id, self.user_id == user_id)).first()
-        print('----------- return query: ', record)
+    def save(self) -> None:
+        db.merge(self)
+        db.commit()
+
+    def exist(self) -> bool:
+        record = db.query(SessionLog).filter(self.session_id == self.session_id).first()
         return record is not None
