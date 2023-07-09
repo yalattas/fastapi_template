@@ -2,6 +2,7 @@ import uvicorn
 import sentry_sdk
 import tracemalloc
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from openapi import OpenAPI
 from conf.settings import settings
 import urls as main_url
@@ -19,7 +20,13 @@ if settings.IS_SENTRY_ENABLED:
         traces_sample_rate=1.0,
         environment=settings.ENVIRONMENT
     )
-
+origins = [
+    "http://localhost:8000",
+    "http://localhost",
+    "http://10.0.2.226:8000",
+    "http://10.0.2.226",
+    "*"
+]
 app = FastAPI(
     title=OpenAPI.title,
     summary=OpenAPI.summary,
@@ -32,6 +39,13 @@ app = FastAPI(
     terms_of_service=OpenAPI.terms_of_service,
     contact=OpenAPI.contact,
     license_info=OpenAPI.license_info,
+)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 # routers -------------------------------
 app.include_router(main_url.router)
